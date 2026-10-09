@@ -85,7 +85,7 @@ print(result.cell_qc.head())
 print("Shared genes:", result.run_qc["n_shared_genes"])
 print("NMF converged:", result.run_qc["nmf_converged"])
 
-add_usage_to_obs(adata, result.usage)
+add_usage_to_obs(adata, result)
 ```
 
 `result.usage` contains per-cell program usage percentages.
@@ -113,10 +113,10 @@ The command stops if its result files already exist in the output directory. Use
 
 The command writes:
 
-- `usage_percent.tsv` — per-cell program usage percentages.
-- `raw_w.tsv` — fitted non-negative program weights before percentage normalization.
-- `cell_qc.tsv` — per-cell reference-gene and fit QC.
-- `run_qc.json` — reference information, software versions, gene coverage, NMF convergence information, and run-level QC.
+- `usage_percent.tsv`: per-cell program usage percentages.
+- `raw_w.tsv`: fitted non-negative program weights before percentage normalization.
+- `cell_qc.tsv`: per-cell reference-gene and fit QC.
+- `run_qc.json`: reference information, software versions, gene coverage, NMF convergence information, and run-level QC.
 
 ## Method
 
@@ -168,7 +168,7 @@ The bundled reference spectra are distributed under the Creative Commons Attribu
 
 ## Citation
 
-If you use the bundled glioma reference programs, please cite:
+If you use the human glioma reference programs, please cite:
 
 Miller TE, El Farran CA, Couturier CP, et al.  
 **Programs, origins and immunomodulatory functions of myeloid cells in glioma.**  
