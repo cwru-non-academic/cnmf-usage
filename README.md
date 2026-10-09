@@ -1,13 +1,11 @@
-# cnmf-usage
+<h1 align="center">cnmf-usage</h1>
 
 `cnmf-usage` back-calculates per-cell cNMF program usage from fixed reference spectra and an AnnData count matrix.
 
 ## Scope
 
 The bundled human reference programs were derived from single-cell RNA-seq of human adult diffuse gliomas. The source study included IDH-mutant and IDH-wild-type tumors, primary and recurrent tumors, and both low- and high-grade gliomas.
-
 The references should be used when the species, cell population, and biological context of the input data are appropriate for the selected reference. They are not intended as general-purpose programs for unrelated tumor types.
-
 The mouse K14 reference is an ortholog-mapped version of the human glioma myeloid K14 reference for use with mouse glioma myeloid data.
 
 ## Available references
@@ -19,11 +17,30 @@ The mouse K14 reference is an ortholog-mapped version of the human glioma myeloi
 | `human_adult_glioma_allcell_k18` | Human | 18 | Adult diffuse glioma all-cell data |
 
 Reference choice should match the species, cell population, and biological context of the dataset.
+Program names are defined by each reference and are not necessarily identical between the human and mouse K14 references.
+
+## Installation
+
+Python 3.11 is supported.
+Use a dedicated environment because the numerical dependency versions are pinned to the validated package environment.
+
+From a local clone:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install .
+```
+
+For development:
+
+```bash
+uv sync --group dev
+```
 
 ## Input
 
-The input is an AnnData `.h5ad` file with raw or corrected counts stored in a named layer.
-
+Input is an AnnData `.h5ad` file with raw or corrected counts stored in a named layer.
 For example:
 
 ```python
@@ -31,15 +48,10 @@ adata.layers["counts"]
 ```
 
 Only the layer specified by `counts_layer` is used for back-calculation. `.X`, `.raw`, and other layers are not used as substitutes.
-
-Normalized or log-transformed expression must not be supplied as the count layer.
-
+Normalized or log-transformed expression must not be supplied as the count layer. Input validation stops the run if the selected layer appears normalized or log-transformed, or if fewer than two cells are supplied.
 `adata.var_names` must contain gene symbols that match the selected reference. Matching is exact and case-sensitive. Human references require human gene symbols, and the mouse reference requires mouse gene symbols.
-
 Gene identifiers are not converted automatically. For example, Ensembl IDs are not converted to gene symbols.
-
 A run with no shared genes fails validation.
-
 All supplied cells are scaled and fitted together. Do not split cells that you want to compare into separate runs.
 
 ## Python usage
@@ -47,7 +59,7 @@ All supplied cells are scaled and fitted together. Do not split cells that you w
 ```python
 import scanpy as sc
 
-from cnmf_usage import calculate_usage
+from cnmf_usage import add_usage_to_obs, calculate_usage
 
 adata = sc.read_h5ad("sample.h5ad")
 
@@ -62,13 +74,13 @@ print(result.cell_qc.head())
 
 print("Shared genes:", result.run_qc["n_shared_genes"])
 print("NMF converged:", result.run_qc["nmf_converged"])
+
+add_usage_to_obs(adata, result.usage)
 ```
 
 `result.usage` contains per-cell program usage percentages.
-
-For cells with non-zero fitted usage, each row sums to 100%. Cells with zero total fitted usage remain `NaN` and are flagged in the QC output.
-
-The package also provides `add_usage_to_obs` for explicitly adding usage percentages to `adata.obs`.
+For cells with non-zero fitted usage, each row sums to 100%. Cells with zero total fitted usage remain `NaN` and are flagged by `zero_usage_cell` in the per-cell QC output.
+`add_usage_to_obs` explicitly adds the usage percentages to `adata.obs`.
 
 ## Command line
 
@@ -87,8 +99,7 @@ cnmf-usage run --help
 ```
 
 to see all available options.
-
-Existing `cnmf-usage` output files are protected by default. Use `--overwrite` to replace them.
+The command stops if its result files already exist in the output directory. Use `--overwrite` to replace them.
 
 The command writes:
 
@@ -112,7 +123,6 @@ where:
 - `W` is the estimated program usage matrix.
 
 The package does not learn new cNMF programs.
-
 The workflow:
 
 1. Matches shared genes using exact, case-sensitive gene symbols and preserves input gene order.
@@ -122,26 +132,20 @@ The workflow:
 5. Converts each cell's fitted program weights in `W` to percentages.
 
 The package does not perform library-size normalization, log transformation, highly variable gene selection, batch correction, gene-name conversion, or missing-gene imputation.
-
-Gene matching, scaling, NMF settings, and usage normalization are fixed by the package to preserve reproducibility.
+Gene matching, scaling, NMF settings, and usage normalization are fixed by the package to preserve reproducibility. Bundled reference files are verified against stored SHA-256 hashes when they are loaded to detect accidental modification of the reference spectra.
 
 ## Interpretation and QC
 
 Program usage is relative within each cell.
-
 Because scaling and fitting use all supplied cells together, usage estimates can change when the set of cells in a run changes. Cells that should be compared should therefore be analyzed in the same run.
 
-Useful run-level QC fields include:
+Useful QC fields include:
 
-- `n_shared_genes`
-- `program_mass_retained`
-- `nmf_converged`
-
-Per-cell fit quality is reported with `relative_fit_error`.
-
-## Reference integrity
-
-Bundled reference files are verified against stored SHA-256 hashes when they are loaded. This detects accidental modification of the reference spectra.
+- `n_shared_genes` — number of genes shared between the input and reference.
+- `program_mass_retained` — fraction of each reference program's total weight represented by the shared genes. A low value indicates that a larger part of that reference program is represented by genes absent from the input.
+- `nmf_converged` — whether the fixed-H NMF fit converged within the allowed iterations.
+- `relative_fit_error` — per-cell reconstruction error; larger values indicate a poorer fit to the reference programs.
+- `zero_usage_cell` — flags cells for which the fitted program weights sum to zero.
 
 ## Tutorial
 
@@ -149,11 +153,8 @@ See the [single-sample tutorial](examples/tutorial.ipynb) for an end-to-end exam
 
 ## License
 
-The software source code is licensed under the MIT License.
-
-The bundled reference spectra are distributed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
-
-See `LICENSE` and `src/cnmf_usage/data/references/LICENSE` for details.
+The software source code is licensed under the [MIT License](LICENSE).
+The bundled reference spectra are distributed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). See the [reference spectra license](src/cnmf_usage/data/references/LICENSE) for attribution and modification information.
 
 ## Citation
 
@@ -163,10 +164,3 @@ Miller TE, El Farran CA, Couturier CP, et al.
 **Programs, origins and immunomodulatory functions of myeloid cells in glioma.**  
 *Nature*. 2025;640:1072-1082.  
 doi:10.1038/s41586-025-08633-8
-
-For cNMF, please also cite:
-
-Kotliar D, Veres A, Nagy MA, et al.  
-**Identifying gene expression programs of cell-type identity and cellular activity with single-cell RNA-Seq.**  
-*eLife*. 2019;8:e43803.  
-doi:10.7554/eLife.43803
