@@ -21,28 +21,38 @@ Program names are defined by each reference and are not necessarily identical be
 
 ## Installation
 
-Python 3.11 is supported.
-Use a dedicated environment because the numerical dependency versions are pinned to the validated package environment.
+Requires Python 3.11. Python 3.12 and later are not supported yet.
 
-From a local clone:
+Clone a release:
 
 ```bash
-python -m venv .venv
+git clone --branch v0.1.0 https://github.com/cwru-non-academic/cnmf-usage.git
+cd cnmf-usage
+```
+
+### Option 1: uv (recommended)
+
+Installs the exact validated environment from `uv.lock`. uv downloads Python 3.11 if needed.
+```bash
+uv sync --no-dev
+uv run cnmf-usage --version
+```
+> `uv run` works inside the repository folder. To use `cnmf-usage` from any folder, activate the environment first: `source .venv/bin/activate`.
+
+### Option 2: pip
+```bash
+python3.11 -m venv .venv
 source .venv/bin/activate
-pip install .
+python -m pip install .
+cnmf-usage --version
 ```
-
-For development:
-
-```bash
-uv sync --group dev
-```
+> With pip, the main dependency versions match the validated environment, but other dependency versions can differ.
+> Conda users: Create an environment with `python=3.11`, activate it, then run `python -m pip install .`.
 
 ## Input
 
 Input is an AnnData `.h5ad` file with raw or corrected counts stored in a named layer.
 For example:
-
 ```python
 adata.layers["counts"]
 ```
