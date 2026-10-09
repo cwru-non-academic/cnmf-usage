@@ -1,0 +1,40 @@
+Bundled reference spectra
+=========================
+
+The reference spectra in this directory are distributed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+License:
+https://creativecommons.org/licenses/by/4.0/
+
+Attribution
+-----------
+
+Miller TE, El Farran CA, Couturier CP, et al.
+Programs, origins and immunomodulatory functions of myeloid cells in glioma.
+Nature. 2025;640:1072-1082.
+https://doi.org/10.1038/s41586-025-08633-8
+
+Included reference files
+------------------------
+
+human_glioma_myeloid_k14.txt
+    Human glioma myeloid K14 reference.
+
+human_adult_glioma_allcell_k18.tsv
+    Human adult diffuse glioma all-cell K18 reference.
+
+mouse_glioma_myeloid_k14_ortholog.tsv
+    Mouse ortholog-mapped version of the human glioma myeloid K14 reference.
+
+Modifications
+-------------
+
+The mouse K14 reference was derived from the human glioma myeloid K14
+reference by ortholog mapping for use with mouse gene symbols.
+
+Software license
+----------------
+
+The software source code is licensed separately under the MIT License.
+See the repository root LICENSE file.
