@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import platform
 import warnings
 from importlib.metadata import PackageNotFoundError, version
 
@@ -314,6 +315,7 @@ def _run_qc(
 
     return {
         "package_version": _package_version(),
+        "python_version": platform.python_version(),
         "dependency_versions": {
             "numpy": version("numpy"),
             "scipy": version("scipy"),

@@ -273,7 +273,9 @@ def validate_input(
     """Validate the requested counts layer for back-calculation."""
 
     if counts_layer not in adata.layers:
-        available = ", ".join(adata.layers.keys()) or "none"
+        available = (
+            ", ".join(str(key) for key in adata.layers if key is not None) or "none"
+        )
 
         raise InputValidationError(
             f"Counts layer '{counts_layer}' was not found. "
