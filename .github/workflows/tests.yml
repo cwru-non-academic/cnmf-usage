@@ -13,7 +13,7 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
+          python-version: "3.14"
           enable-cache: true
 
       - name: Install
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install wheel in clean environment
         run: |
-          uv venv --python 3.11 /tmp/cnmf-wheel-test
+          uv venv --python 3.14 /tmp/cnmf-wheel-test
           uv pip install --python /tmp/cnmf-wheel-test/bin/python dist/*.whl
 
       - name: Test installed package
