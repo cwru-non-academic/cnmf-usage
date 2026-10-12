@@ -21,18 +21,15 @@ Program names are defined by each reference and are not necessarily identical be
 
 ## Installation
 
-Requires Python 3.11. Python 3.12 and later are not supported yet.
-
-Clone a release:
-
+Requires Python 3.14. Clone the repository:
 ```bash
-git clone --branch v0.1.0 https://github.com/cwru-non-academic/cnmf-usage.git
+git clone https://github.com/cwru-non-academic/cnmf-usage.git
 cd cnmf-usage
 ```
 
 ### Option 1: uv (recommended)
 
-Installs the exact validated environment from `uv.lock`. uv downloads Python 3.11 if needed.
+Installs the exact validated environment from `uv.lock`. uv downloads Python 3.14 if needed.
 ```bash
 uv sync --no-dev
 uv run cnmf-usage --version
@@ -41,13 +38,13 @@ uv run cnmf-usage --version
 
 ### Option 2: pip
 ```bash
-python3.11 -m venv .venv
+python3.14 -m venv .venv
 source .venv/bin/activate
 python -m pip install .
 cnmf-usage --version
 ```
 > With pip, the main dependency versions match the validated environment, but other dependency versions can differ.
-> Conda users: Create an environment with `python=3.11`, activate it, then run `python -m pip install .`.
+> Conda users: Create an environment with `python=3.14`, activate it, then run `python -m pip install .`.
 
 ## Input
 
