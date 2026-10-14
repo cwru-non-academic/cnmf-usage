@@ -27,7 +27,7 @@ git clone https://github.com/cwru-non-academic/cnmf-usage.git
 cd cnmf-usage
 ```
 
-### Option 1: uv (recommended)
+### Via uv (recommended)
 
 Installs the exact validated environment from `uv.lock`. uv downloads Python 3.14 if needed.
 ```bash
@@ -36,7 +36,7 @@ uv run cnmf-usage --version
 ```
 > `uv run` works inside the repository folder. To use `cnmf-usage` from any folder, activate the environment first: `source .venv/bin/activate`.
 
-### Option 2: pip
+### Via pip
 ```bash
 python3.14 -m venv .venv
 source .venv/bin/activate
@@ -148,11 +148,11 @@ Because scaling and fitting use all supplied cells together, usage estimates can
 
 Useful QC fields include:
 
-- `n_shared_genes` — number of genes shared between the input and reference.
-- `program_mass_retained` — fraction of each reference program's total weight represented by the shared genes. A low value indicates that a larger part of that reference program is represented by genes absent from the input.
-- `nmf_converged` — whether the fixed-H NMF fit converged within the allowed iterations.
-- `relative_fit_error` — per-cell reconstruction error; larger values indicate a poorer fit to the reference programs.
-- `zero_usage_cell` — flags cells for which the fitted program weights sum to zero.
+- `n_shared_genes`: number of genes shared between the input and reference.
+- `program_mass_retained`: fraction of each reference program's total weight represented by the shared genes. A low value indicates that a larger part of that reference program is represented by genes absent from the input.
+- `nmf_converged`: whether the fixed-H NMF fit converged within the allowed iterations.
+- `relative_fit_error`: per-cell reconstruction error; larger values indicate a poorer fit to the reference programs.
+- `zero_usage_cell`: flags cells for which the fitted program weights sum to zero.
 
 ## Tutorial
 
