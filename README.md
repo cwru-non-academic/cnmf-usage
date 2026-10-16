@@ -1,6 +1,6 @@
 <h1 align="center">cnmf-usage</h1>
 
-`cnmf-usage` back-calculates per-cell cNMF program usage from fixed reference spectra and an AnnData count matrix.
+`cnmf-usage` back-calculates per-cell cNMF program usage from fixed reference spectra using raw or corrected counts stored in an AnnData object.
 
 ## Scope
 
